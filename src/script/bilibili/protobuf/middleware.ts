@@ -5,12 +5,14 @@ export interface Argument {
     displayUpList: 'auto' | 'show' | 'hide';
     purifyComment: boolean | number;
     sponsorBlock: boolean | string;
+    hideSearchDiscovery: boolean | number;
 }
 
 export const initArgument: Middleware = createInitArgumentMiddleware<Argument>({
     displayUpList: 'show',
     purifyComment: true,
     sponsorBlock: true,
+    hideSearchDiscovery: true,
 });
 
 export const handleResponseHeaders: Middleware = (ctx, next) => {

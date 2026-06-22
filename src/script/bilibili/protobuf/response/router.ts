@@ -34,8 +34,8 @@ router.post('v1.DM/DmView', handleDmViewReply);
 router.post('v1.Reply/MainList', initArgument, handleMainListReply);
 router.post('v2.PlayURL/PlayView', handleIpadPlayViewReply);
 router.post('v1.Search/SearchAll', handleSearchAllResponse);
+router.post('v1.Search/DefaultWords', initArgument, handleDefaultWordsReply);
 
-// router.post('v1.Search/DefaultWords', handleDefaultWordsReply);
 // router.post('v1.Teenagers/ModeStatus', handleModeStatusReply);
 // router.post('view.v1.View/TFInfo', handleTFInfoReply);
 

@@ -115,6 +115,13 @@ export interface AccountInfo {
     };
 }
 
+export interface SearchSquare {
+    code: number;
+    message: string;
+    ttl: number;
+    data: unknown;
+}
+
 export interface VIP {
     status: number;
     type: number;

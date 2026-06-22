@@ -9,6 +9,7 @@ import {
     FeedIndexStory,
     AccountMine,
     AccountInfo,
+    SearchSquare,
     LiveRoomInfo,
     LiveCardType,
     LiveFeedInfo,
@@ -125,6 +126,20 @@ export const handleAccountMyInfo: Middleware = (ctx, next) => {
     const { data } = ctx.state.message as AccountInfo;
 
     data.vip = getVIPData();
+
+    return next();
+};
+
+export const handleSearchSquare: Middleware = (ctx, next) => {
+    const { hideHotSearch } = ctx.argument as Argument;
+
+    if (hideHotSearch) {
+        const message = ctx.state.message as SearchSquare;
+        message.code = -404;
+        message.message = '-404';
+        message.ttl = 1;
+        message.data = null;
+    }
 
     return next();
 };

@@ -13,6 +13,12 @@ export const handleDefaultWordsReq: Middleware = (ctx, next) => {
 };
 
 export const handleDefaultWordsReply: Middleware = (ctx, next) => {
+    const { hideSearchDiscovery = true } = ctx.argument as { hideSearchDiscovery?: boolean | number };
+
+    if (!hideSearchDiscovery) {
+        return next();
+    }
+
     const message = DefaultWordsReply.fromBinary(ctx.response.bodyBytes);
     message.show = '搜索视频、番剧或up主';
     message.word = '';

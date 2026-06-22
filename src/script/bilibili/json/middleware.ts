@@ -4,9 +4,10 @@ import { getI18n } from '../locale';
 
 export interface Argument {
     showCreatorHub: boolean | number;
+    hideHotSearch: boolean | number;
 }
 
-export const initArgument = createInitArgumentMiddleware<Argument>({ showCreatorHub: false });
+export const initArgument = createInitArgumentMiddleware<Argument>({ showCreatorHub: false, hideHotSearch: true });
 
 export const initI18n: Middleware = async (ctx, next) => {
     const locale = ctx.url.searchParams.get('s_locale') || '';
