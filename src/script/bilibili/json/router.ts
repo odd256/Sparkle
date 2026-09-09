@@ -9,6 +9,7 @@ import {
     handleLiveRoomInfo,
     handleLiveUserInfo,
     handleSplash,
+    handleSearchSquare,
 } from './handler';
 import { initI18n, interceptor, initArgument } from './middleware';
 
@@ -20,6 +21,7 @@ router.get('/show/tab/v2', initI18n, handleLayout);
 router.get(['/splash/list', '/splash/show', '/splash/event/list2'], interceptor, handleSplash);
 router.get('/feed/index', handleFeedIndex);
 router.get('/feed/index/story', handleFeedIndexStory);
+router.get('/search/square', interceptor, handleSearchSquare);
 router.get(['/account/mine', '/account/mine/ipad'], initArgument, initI18n, handleAccountMine);
 router.get('/account/myinfo', handleAccountMyInfo);
 router.get('/index/feed', handleLiveFeedInfo);

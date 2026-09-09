@@ -12,6 +12,7 @@ import {
     LiveCardType,
     LiveFeedInfo,
     LiveUserInfo,
+    SearchSquare,
 } from './types';
 import { Middleware } from './middleware';
 
@@ -93,6 +94,16 @@ export const handleFeedIndexStory: Middleware<FeedIndexStory> = (ctx, next) => {
             }
             return false;
         }, []);
+    }
+
+    return next();
+};
+
+export const handleSearchSquare: Middleware<SearchSquare> = (ctx, next) => {
+    const { data } = ctx.state.message;
+
+    if (Array.isArray(data)) {
+        ctx.state.message.data = data.filter(item => item.type !== 'trending');
     }
 
     return next();

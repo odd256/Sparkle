@@ -82,6 +82,15 @@ export interface FeedIndexStory {
     };
 }
 
+export interface SearchSquare {
+    data: SearchSquareItem[];
+}
+
+export interface SearchSquareItem {
+    type: string;
+    [key: string]: unknown;
+}
+
 export interface StoryItem {
     ad_info?: unknown;
     card_goto?: GotoType;
