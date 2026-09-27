@@ -14,8 +14,9 @@ import {
     RelatesFeedReply,
     ViewReply,
     ViewProgressReply,
-    RelateCard,
     AIRelateAsyncReply,
+    Module,
+    RelateCard,
 } from '@proto/bilibili/app/viewunite/v1/view';
 import {
     DanmakuElem,
@@ -207,26 +208,9 @@ export const handleViewReply: Middleware = (ctx, next) => {
     const message = ViewReply.fromBinary(ctx.response.bodyBytes);
     message.cm = undefined;
     if (message.reqUser) message.reqUser.elecPlusBtn = undefined;
-    const excludeTypes = [
-        ModuleType.ACTIVITY,
-        ModuleType.PAY_BAR,
-        ModuleType.SPECIALTAG,
-        ModuleType.MERCHANDISE,
-        ModuleType.VIDEO_MENTIONS,
-    ];
     message.tab?.tabModule.forEach(tabModule => {
         if (tabModule.tab.oneofKind !== 'introduction') return;
-        tabModule.tab.introduction.modules = tabModule.tab.introduction.modules.filter(module => {
-            if (excludeTypes.includes(module.type)) {
-                return false;
-            }
-            if (module.type === ModuleType.UGC_HEADLINE && module.data.oneofKind === 'headLine') {
-                module.data.headLine.label = undefined;
-            } else if (module.type === ModuleType.RELATED_RECOMMEND && module.data.oneofKind === 'relates') {
-                module.data.relates.cards = handleRelateCard(module.data.relates.cards);
-            }
-            return true;
-        }, []);
+        tabModule.tab.introduction.modules = handleViewModules(tabModule.tab.introduction.modules);
     });
     ctx.response.bodyBytes = ViewReply.toBinary(message);
     return next();
@@ -235,14 +219,33 @@ export const handleViewReply: Middleware = (ctx, next) => {
 export const handleAIRelateAsyncReply: Middleware = (ctx, next) => {
     const message = AIRelateAsyncReply.fromBinary(ctx.response.bodyBytes);
     message.cm = undefined;
-    message.module?.modules.forEach(module => {
-        if (module.type === ModuleType.RELATED_RECOMMEND && module.data.oneofKind === 'relates') {
-            module.data.relates.cards = handleRelateCard(module.data.relates.cards);
-        }
-    });
+    if (message.module) {
+        message.module.modules = handleViewModules(message.module.modules);
+    }
     ctx.response.bodyBytes = AIRelateAsyncReply.toBinary(message);
     return next();
 };
+
+function handleViewModules(modules: Module[]) {
+    const excludeTypes = [
+        ModuleType.ACTIVITY,
+        ModuleType.PAY_BAR,
+        ModuleType.SPECIALTAG,
+        ModuleType.MERCHANDISE,
+        ModuleType.VIDEO_MENTIONS,
+    ];
+    return modules.filter((module: Module) => {
+        if (excludeTypes.includes(module.type)) {
+            return false;
+        }
+        if (module.type === ModuleType.UGC_HEADLINE && module.data.oneofKind === 'headLine') {
+            module.data.headLine.label = undefined;
+        } else if (module.type === ModuleType.RELATED_RECOMMEND && module.data.oneofKind === 'relates') {
+            module.data.relates.cards = handleRelateCard(module.data.relates.cards);
+        }
+        return true;
+    });
+}
 
 function handleRelateCard(cards: RelateCard[]): RelateCard[] {
     const excludeTypes = [
